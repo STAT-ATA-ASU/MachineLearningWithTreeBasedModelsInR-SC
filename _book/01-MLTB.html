@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Machine Learning with Tree-Based Models in R - 1&nbsp; Classification Trees</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-MLTB.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Classification Trees</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./"></a><a href="https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r">Machine Learning with Tree-Based Models in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-MLTB.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Classification Trees</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#welcome-to-the-course---video" id="toc-welcome-to-the-course---video" class="nav-link active" data-scroll-target="#welcome-to-the-course---video">Welcome to the course! - (video)</a></li>
+  <li><a href="#why-tree-based-methods" id="toc-why-tree-based-methods" class="nav-link" data-scroll-target="#why-tree-based-methods"><span class="header-section-number">1.1</span> Why tree-based methods?</a></li>
+  <li><a href="#specify-that-tree" id="toc-specify-that-tree" class="nav-link" data-scroll-target="#specify-that-tree"><span class="header-section-number">1.2</span> Specify that tree</a>
+  <ul class="collapse">
+  <li><a href="#instructions" id="toc-instructions" class="nav-link" data-scroll-target="#instructions">Instructions</a></li>
+  </ul></li>
+  <li><a href="#train-that-model" id="toc-train-that-model" class="nav-link" data-scroll-target="#train-that-model"><span class="header-section-number">1.3</span> Train that model</a>
+  <ul class="collapse">
+  <li><a href="#instructions-1" id="toc-instructions-1" class="nav-link" data-scroll-target="#instructions-1">Instructions</a></li>
+  </ul></li>
+  <li><a href="#how-to-grow-your-tree---video" id="toc-how-to-grow-your-tree---video" class="nav-link" data-scroll-target="#how-to-grow-your-tree---video">How to grow your tree - (video)</a></li>
+  <li><a href="#traintest-split" id="toc-traintest-split" class="nav-link" data-scroll-target="#traintest-split"><span class="header-section-number">1.4</span> Train/test split</a>
+  <ul class="collapse">
+  <li><a href="#instructions-2" id="toc-instructions-2" class="nav-link" data-scroll-target="#instructions-2">Instructions</a></li>
+  </ul></li>
+  <li><a href="#avoiding-class-imbalances" id="toc-avoiding-class-imbalances" class="nav-link" data-scroll-target="#avoiding-class-imbalances"><span class="header-section-number">1.5</span> Avoiding class imbalances</a>
+  <ul class="collapse">
+  <li><a href="#instructions-3" id="toc-instructions-3" class="nav-link" data-scroll-target="#instructions-3">Instructions</a></li>
+  </ul></li>
+  <li><a href="#from-zero-to-hero" id="toc-from-zero-to-hero" class="nav-link" data-scroll-target="#from-zero-to-hero"><span class="header-section-number">1.6</span> From zero to hero</a>
+  <ul class="collapse">
+  <li><a href="#instructions-4" id="toc-instructions-4" class="nav-link" data-scroll-target="#instructions-4">Instructions</a></li>
+  </ul></li>
+  <li><a href="#predict-and-evaluate---video" id="toc-predict-and-evaluate---video" class="nav-link" data-scroll-target="#predict-and-evaluate---video">Predict and evaluate - (video)</a></li>
+  <li><a href="#make-predictions" id="toc-make-predictions" class="nav-link" data-scroll-target="#make-predictions"><span class="header-section-number">1.7</span> Make predictions</a>
+  <ul class="collapse">
+  <li><a href="#instructions-5" id="toc-instructions-5" class="nav-link" data-scroll-target="#instructions-5">Instructions</a></li>
+  </ul></li>
+  <li><a href="#crack-the-matrix" id="toc-crack-the-matrix" class="nav-link" data-scroll-target="#crack-the-matrix"><span class="header-section-number">1.8</span> Crack the matrix</a>
+  <ul class="collapse">
+  <li><a href="#instructions-6" id="toc-instructions-6" class="nav-link" data-scroll-target="#instructions-6">Instructions</a></li>
+  </ul></li>
+  <li><a href="#are-you-predicting-correctly" id="toc-are-you-predicting-correctly" class="nav-link" data-scroll-target="#are-you-predicting-correctly"><span class="header-section-number">1.9</span> Are you predicting correctly?</a>
+  <ul class="collapse">
+  <li><a href="#instructions-7" id="toc-instructions-7" class="nav-link" data-scroll-target="#instructions-7">Instructions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="intro" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Classification Trees</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Ready to build a real machine learning pipeline? Complete step-by-step exercises to learn how to create decision trees, split your data, and predict which patients are most likely to suffer from diabetes. Last but not least, you’ll build performance measures to assess your models and judge your predictions.</p>
+<section id="welcome-to-the-course---video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="welcome-to-the-course---video">Welcome to the course! - (video)</h2>
+<iframe src="https://drive.google.com/file/d/1X-Cb_8ocpXezZPLk-6o8IcP860m5_av5/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="why-tree-based-methods" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="why-tree-based-methods"><span class="header-section-number">1.1</span> Why tree-based methods?</h2>
+<p>Tree-based models are one class of methods used in machine learning. They are superior in many ways, but also have their drawbacks.</p>
+<p>Which of these statements are true and which are false?</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./pics/trees.png" class="img-fluid figure-img" width="439"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="specify-that-tree" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="specify-that-tree"><span class="header-section-number">1.2</span> Specify that tree</h2>
+<p>In order to build models and use them to solve real-world problems, you first need to lay the foundations of your model by creating a model specification. This is the very first step in every machine learning pipeline that you will ever build.</p>
+<p>You are going to load the relevant packages and design the specification for your classification tree in just a few steps.</p>
+<p>A magical moment, enjoy!</p>
+<section id="instructions" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions">Instructions</h3>
+<ul>
+<li>Load the <code>tidymodels</code> package.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Pick a model class for decision trees, save it as <code>tree_spec</code>, and print it.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a model class</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>tree_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Decision Tree Model Specification (unknown mode)
+
+Computational engine: rpart </code></pre>
+</div>
+</div>
+<ul>
+<li>Set the engine to <code>"rpart"</code> and print the result.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a model class</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the engine</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>tree_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Decision Tree Model Specification (unknown mode)
+
+Computational engine: rpart </code></pre>
+</div>
+</div>
+<ul>
+<li>Set the mode to <code>"classification"</code> and print the result.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a model class</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the engine</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the mode</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>tree_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Decision Tree Model Specification (classification)
+
+Computational engine: rpart </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You created a decision tree model class, used an <code>rpart</code> engine, and set the mode to <code>"classification"</code>. Remember, you will need to perform similar steps every time you design a new model. Come back anytime if you need a reminder!</p>
+</div>
+</div>
+</section>
+</section>
+<section id="train-that-model" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="train-that-model"><span class="header-section-number">1.3</span> Train that model</h2>
+<p>A model specification is a good start, just like the canvas for a painter. But just as a painter needs color, the specification needs data. Only the final model is able to make predictions:</p>
+<p><em>Model specification + data = model</em></p>
+<p>In this exercise, you will train a decision tree that models the risk of diabetes using health variables as predictors. The response variable, <code>outcome</code>, indicates whether the patient has diabetes or not, which means this is a binary classification problem (there are just two classes). The dataset also contains health variables of patients like <code>blood_pressure</code>, <code>age</code>, and <code>bmi</code>.</p>
+<p>For the rest of the course, the <code>tidymodels</code> package will always be pre-loaded. In this exercise, the <code>diabetes</code> dataset is also available in your workspace.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"./data/diabetes_tibble.csv"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Change character outcome to a factor</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>diabetes <span class="ot">&lt;-</span> diabetes <span class="sc">|&gt;</span>  <span class="fu">mutate_if</span>(is.character, as.factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instructions-1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-1">Instructions</h3>
+<ul>
+<li>Create <code>tree_spec</code>, a specification for a decision tree with an <code>rpart</code> engine.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the specification</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Train a model <code>tree_model_bmi</code>, where the <code>outcome</code> depends only on the <code>bmi</code> predictor by fitting the <code>diabetes</code> dataset to the specification.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tree_model_bmi <span class="ot">&lt;-</span> tree_spec <span class="sc">|&gt;</span>  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> bmi, <span class="at">data =</span> diabetes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Print the model to the console.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tree_model_bmi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+n= 768 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 768 268 no (0.6510417 0.3489583)  
+  2) bmi&lt; 29.85 291  47 no (0.8384880 0.1615120) *
+  3) bmi&gt;=29.85 477 221 no (0.5366876 0.4633124)  
+    6) bmi&lt; 40.85 392 168 no (0.5714286 0.4285714) *
+    7) bmi&gt;=40.85 85  32 yes (0.3764706 0.6235294) *</code></pre>
+</div>
+</div>
+<ul>
+<li>Graph the model with <code>rpart.plot()</code></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(tree_model_bmi<span class="sc">$</span>fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-MLTB_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="384"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You have defined your model with <code>decision_tree()</code> and trained it to predict outcome using <code>bmi</code> like a professional coach! Printing the model displays useful information, such as the training time, the model formula used during training, and the node details. Remember, to fit a model to data is just a different phrase for training it. Don’t worry about the precise output too much, you’ll cover that later!</p>
+</div>
+</div>
+</section>
+</section>
+<section id="how-to-grow-your-tree---video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="how-to-grow-your-tree---video">How to grow your tree - (video)</h2>
+<iframe src="https://drive.google.com/file/d/1mG-kkJlnt4akhVJtCPbSc3Bm0L2k8ZEZ/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="traintest-split" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="traintest-split"><span class="header-section-number">1.4</span> Train/test split</h2>
+<p>In order to test your models, you need to build and test the model on two different parts of the data - otherwise, it’s like cheating on an exam (as you already know the answers).</p>
+<p>The data split is an integral part of the modeling process. You will dive into this by splitting the diabetes data and confirming the split proportions.</p>
+<p>The <code>diabetes</code> data from the last exercise is pre-loaded in your workspace.</p>
+<section id="instructions-2" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-2">Instructions</h3>
+<ul>
+<li>Split the <code>diabetes</code> tibble into <code>diabetes_split</code>, a split of 80% training and 20% test data.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the split</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, <span class="at">prop =</span> <span class="fl">0.80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Print the resulting object.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the data split</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>diabetes_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;Training/Testing/Total&gt;
+&lt;614/154/768&gt;</code></pre>
+</div>
+</div>
+<ul>
+<li>Extract the training and test sets and save them as <code>diabetes_train</code> and <code>diabetes_test</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the training and test set</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>diabetes_train <span class="ot">&lt;-</span> <span class="fu">training</span>(diabetes_split)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>diabetes_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(diabetes_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Verify the correct row proportion in both datasets compared to the <code>diabetes</code> tibble.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the proportions of both sets</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">nrow</span>(diabetes_train) <span class="sc">/</span> <span class="fu">nrow</span>(diabetes), <span class="dv">2</span>) <span class="sc">==</span> <span class="fl">0.80</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">nrow</span>(diabetes_test) <span class="sc">/</span> <span class="fu">nrow</span>(diabetes), <span class="dv">2</span>) <span class="sc">==</span> <span class="fl">0.20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using <code>training()</code> and <code>testing()</code> after the split ensures that you save your working datasets.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="avoiding-class-imbalances" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="avoiding-class-imbalances"><span class="header-section-number">1.5</span> Avoiding class imbalances</h2>
+<p>Some data contains very imbalanced outcomes - like a rare disease dataset. When splitting randomly, you might end up with a very unfortunate split. Imagine all the rare observations are in the test and none in the training set. That would ruin your whole training process!</p>
+<p>Fortunately, the <code>initial_split()</code> function provides a remedy. You are going to observe and solve these so-called class imbalances in this exercise.</p>
+<p>There is already code provided to create a split object <code>diabetes_split</code> with a 75% training and 25% test split.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preparation</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9888</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, <span class="at">prop =</span> <span class="fl">0.75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instructions-3" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-3">Instructions</h3>
+<ul>
+<li>Count the proportion of <code>"yes"</code> outcomes in the training and test sets of <code>diabetes_split</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of 'yes' outcomes in the training data</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>counts_train <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">training</span>(diabetes_split)<span class="sc">$</span>outcome)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>prop_yes_train <span class="ot">&lt;-</span> counts_train[<span class="st">"yes"</span>] <span class="sc">/</span> <span class="fu">sum</span>(counts_train)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of 'yes' outcomes in the test data</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>counts_test <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">testing</span>(diabetes_split)<span class="sc">$</span>outcome)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>prop_yes_test <span class="ot">&lt;-</span> counts_test[<span class="st">"yes"</span>] <span class="sc">/</span> <span class="fu">sum</span>(counts_test)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Proportion of positive outcomes in training set:"</span>, <span class="fu">round</span>(prop_yes_train, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Proportion of positive outcomes in training set: 0.31"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Proportion of positive outcomes in test set:"</span>, <span class="fu">round</span>(prop_yes_test, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Proportion of positive outcomes in test set: 0.46"</code></pre>
+</div>
+</div>
+<ul>
+<li>Redesign <code>diabetes_split</code> using the same training/testing proportion, but with the <code>outcome</code> variable being equally distributed in both sets. Count the proportion of <code>yes</code> outcomes in both datasets.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a split with a constant outcome distribution</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, <span class="at">strata =</span> outcome)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of 'yes' outcomes in the training data</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>counts_train <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">training</span>(diabetes_split)<span class="sc">$</span>outcome)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>prop_yes_train <span class="ot">&lt;-</span> counts_train[<span class="st">"yes"</span>] <span class="sc">/</span> <span class="fu">sum</span>(counts_train)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Proportion of 'yes' outcomes in the test data</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>counts_test <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">testing</span>(diabetes_split)<span class="sc">$</span>outcome)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>prop_yes_test <span class="ot">&lt;-</span> counts_test[<span class="st">'yes'</span>] <span class="sc">/</span> <span class="fu">sum</span>(counts_test)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Proportion of positive outcomes in training set:"</span>, <span class="fu">round</span>(prop_yes_train, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Proportion of positive outcomes in training set: 0.35"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"Proportion of positive outcomes in test set:"</span>, <span class="fu">round</span>(prop_yes_test, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Proportion of positive outcomes in test set: 0.35"</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Impressive - from 31% vs.&nbsp;46% positive outcomes to 35% in both sets. This was a tough one, but now you know how simple it is to avoid class imbalances! This is even more important in a large dataset with a very imbalanced target variable.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="from-zero-to-hero" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="from-zero-to-hero"><span class="header-section-number">1.6</span> From zero to hero</h2>
+<p>You mastered the skills of creating a model specification and splitting the data into training and test sets. You also know how to avoid class imbalances in the split. It’s now time to combine what you learned in the preceding lesson and build your model using only the training set!</p>
+<p>You are going to build a proper <em>machine learning pipeline</em>. This is comprised of creating a model specification, splitting your data into training and test sets, and last but not least, fitting the training data to a model. Enjoy!</p>
+<section id="instructions-4" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-4">Instructions</h3>
+<ul>
+<li>Create <code>diabetes_split</code>, a split where the training set contains three-quarters of all diabetes rows and where training and test sets have a similar distribution in the outcome variable.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the balanced data split</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>diabetes_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(diabetes, </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">prop =</span> <span class="fl">0.75</span>, </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">strata =</span> outcome)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Build a decision tree specification for your model using the <code>rpart</code> engine and save it as <code>tree_spec</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the specification of the model</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Fit a model <code>model_trained</code> using the training data of <code>diabetes_split</code> with <code>outcome</code> as the target variable and <code>bmi</code> and <code>skin_thickness</code> as the predictors.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>model_trained <span class="ot">&lt;-</span> tree_spec <span class="sc">|&gt;</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> bmi <span class="sc">+</span> skin_thickness, </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> <span class="fu">training</span>(diabetes_split))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>model_trained</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+n= 576 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+  1) root 576 201 no (0.6510417 0.3489583)  
+    2) bmi&lt; 29.85 213  34 no (0.8403756 0.1596244) *
+    3) bmi&gt;=29.85 363 167 no (0.5399449 0.4600551)  
+      6) bmi&lt; 40.85 297 126 no (0.5757576 0.4242424)  
+       12) bmi&gt;=40.05 10   1 no (0.9000000 0.1000000) *
+       13) bmi&lt; 40.05 287 125 no (0.5644599 0.4355401)  
+         26) skin_thickness&gt;=5.5 208  82 no (0.6057692 0.3942308)  
+           52) skin_thickness&lt; 25.5 48  11 no (0.7708333 0.2291667) *
+           53) skin_thickness&gt;=25.5 160  71 no (0.5562500 0.4437500)  
+            106) bmi&gt;=38.8 19   4 no (0.7894737 0.2105263) *
+            107) bmi&lt; 38.8 141  67 no (0.5248227 0.4751773)  
+              214) bmi&lt; 30.85 15   3 no (0.8000000 0.2000000) *
+              215) bmi&gt;=30.85 126  62 yes (0.4920635 0.5079365)  
+                430) skin_thickness&gt;=35.5 51  21 no (0.5882353 0.4117647) *
+                431) skin_thickness&lt; 35.5 75  32 yes (0.4266667 0.5733333)  
+                  862) skin_thickness&lt; 29.5 37  17 no (0.5405405 0.4594595) *
+                  863) skin_thickness&gt;=29.5 38  12 yes (0.3157895 0.6842105) *
+         27) skin_thickness&lt; 5.5 79  36 yes (0.4556962 0.5443038)  
+           54) bmi&lt; 37.65 66  32 no (0.5151515 0.4848485)  
+            108) bmi&gt;=33.05 30  10 no (0.6666667 0.3333333) *
+            109) bmi&lt; 33.05 36  14 yes (0.3888889 0.6111111) *
+           55) bmi&gt;=37.65 13   2 yes (0.1538462 0.8461538) *
+      7) bmi&gt;=40.85 66  25 yes (0.3787879 0.6212121)  
+       14) skin_thickness&gt;=37.5 24  11 no (0.5416667 0.4583333)  
+         28) skin_thickness&lt; 41.5 11   2 no (0.8181818 0.1818182) *
+         29) skin_thickness&gt;=41.5 13   4 yes (0.3076923 0.6923077) *
+       15) skin_thickness&lt; 37.5 42  12 yes (0.2857143 0.7142857) *</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the model</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(model_trained<span class="sc">$</span>fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-MLTB_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>That pipeline was perfectly handcrafted! Did you see that, according to the nodes, skin thickness lower than 5.5 and BMI value between 37.65 and 40.05 corresponds to a very high risk of diabetes? Let’s head over to the engine room to check your model’s performance.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="predict-and-evaluate---video" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="predict-and-evaluate---video">Predict and evaluate - (video)</h2>
+<iframe src="https://drive.google.com/file/d/1tgR_xrdkzi_hq8_wNO0Sm6TtGysU9Xtb/preview" width="640" height="480" allow="autoplay">
+</iframe>
+</section>
+<section id="make-predictions" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="make-predictions"><span class="header-section-number">1.7</span> Make predictions</h2>
+<p>Making predictions with data is one of the fundamental goals of machine learning. Now that you know how to split the data and fit a model, it’s time to make predictions about unseen samples with your models.</p>
+<p>You are going to make predictions about your test set using a model obtained by fitting the training data to a tree specification.</p>
+<p>Available in your workspace are the datasets that you generated previously (<code>diabetes_train</code> and <code>diabetes_test</code>) and a decision tree specification <code>tree_spec</code>, which was generated using the following code:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instructions-5" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-5">Instructions</h3>
+<ul>
+<li>Fit your specification to the training data using <code>outcome</code> as the target variable and all predictors to create model.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train your model</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> tree_spec <span class="sc">|&gt;</span>  </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(outcome <span class="sc">~</span> ., <span class="at">data =</span> diabetes_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Use your <code>model</code> to predict the outcome of diabetes for every observation in the test set and assign the result to <code>predictions</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate predictions</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">new_data =</span> diabetes_test, </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Add the true test set outcome to <code>predictions</code> as a column named <code>true_class</code> and save the result as <code>predictions_combined</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the true outcomes</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>predictions_combined <span class="ot">&lt;-</span> predictions <span class="sc">|&gt;</span>  </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">true_class =</span> diabetes_test<span class="sc">$</span>outcome)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Use the <code>head()</code> function to print the first rows of the result.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the first  6 lines of the result</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>predictions_combined <span class="sc">|&gt;</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.pred_class</th>
+<th style="text-align: left;">true_class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now every predicted <code>.pred_class</code> has its <code>true_class</code> counterpart. The natural next step would be to compare these two and see how many are correct. You are about to find out in the next exercise.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="crack-the-matrix" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="crack-the-matrix"><span class="header-section-number">1.8</span> Crack the matrix</h2>
+<p>Visual representations are a great and intuitive way to assess results. One way to visualize and assess the performance of your model is by using a confusion matrix. In this exercise, you will create the confusion matrix of your predicted values to see in which cases it performs well and in which cases it doesn’t.</p>
+<p>The result of the previous exercise, <code>predictions_combined</code>, is still loaded.</p>
+<section id="instructions-6" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-6">Instructions</h3>
+<ul>
+<li>Calculate the confusion matrix of the <code>predictions_combined</code> tibble and save it as <code>diabetes_matrix</code>. Print the result to the console.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The confusion matrix</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>diabetes_matrix <span class="ot">&lt;-</span> <span class="fu">conf_mat</span>(predictions_combined,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">truth =</span> true_class,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the matrix</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>diabetes_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Truth
+Prediction no yes
+       no  79  20
+       yes 23  32</code></pre>
+</div>
+</div>
+<ul>
+<li>Out of all true <code>no</code> outcomes, what percent did your model correctly predict?</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dv">79</span><span class="sc">/</span>(<span class="dv">79</span> <span class="sc">+</span> <span class="dv">23</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7745098</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sens</span>(predictions_combined, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">truth =</span> true_class, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 sens    binary         0.775</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Your model found 77.5% of all positive (<code>no</code> diabetes) outcomes. This measure is called <strong><em>sensitivity</em></strong>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="are-you-predicting-correctly" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="are-you-predicting-correctly"><span class="header-section-number">1.9</span> Are you predicting correctly?</h2>
+<p>Your model should be as good as possible, right? One way you can assess this is by counting how often it predicted the correct classes compared to the total number of predictions it made. As discussed in the video, we call this performance measure accuracy. You can either calculate this manually or by using a handy shortcut. Both obtain the same result.</p>
+<p>The confusion matrix <code>diabetes_matrix</code> and the tibble <code>predictions_combined</code> are loaded.</p>
+<section id="instructions-7" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions-7">Instructions</h3>
+<ul>
+<li>Print <code>diabetes_matrix</code> to the console and use its entries to directly calculate <code>correct_predictions</code>, the number of correct predictions. Save the total number of predictions to <code>all_predictions</code>. Calculate and the accuracy, save it to <code>acc_manual</code>, and print it.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>diabetes_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Truth
+Prediction no yes
+       no  79  20
+       yes 23  32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of correctly predicted classes</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>correct_predictions <span class="ot">&lt;-</span> <span class="dv">79</span> <span class="sc">+</span> <span class="dv">32</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of all predicted classes</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>all_predictions <span class="ot">&lt;-</span> <span class="dv">79</span> <span class="sc">+</span> <span class="dv">20</span> <span class="sc">+</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">32</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate and print the accuracy</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>acc_manual <span class="ot">&lt;-</span> correct_predictions <span class="sc">/</span> all_predictions</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>acc_manual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7207792</code></pre>
+</div>
+</div>
+<ul>
+<li>Calculate the accuracy using a <code>yardstick</code> function and store the result in <code>acc_auto</code>. Print the accuracy estimate.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The accuracy calculated by a function</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>acc_auto <span class="ot">&lt;-</span> <span class="fu">accuracy</span>(predictions_combined,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truth =</span> true_class,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>acc_auto<span class="sc">$</span>.estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7207792</code></pre>
+</div>
+</div>
+<ul>
+<li>Accuracy is very intuitive but also has its limitations. Imagine we have a naive model that always predicts <code>no</code>, regardless of the input. What would the accuracy be for that model?</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>HDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">true_class =</span> diabetes_test<span class="sc">$</span>outcome, </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.pred_class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"no"</span>, <span class="dv">154</span>), </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)))</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(HDF, <span class="at">truth =</span> true_class, <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.662</code></pre>
+</div>
+</div>
+<p>For the naive model, it would be accurate 66.23% of the time.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A naive model always predicting no is almost as good as our model. Luckily there are more useful performance metrics which we’ll cover later in the course. Stay tuned for Chapter 3!</p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

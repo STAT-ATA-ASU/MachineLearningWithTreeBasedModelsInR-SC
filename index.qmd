@@ -1,0 +1,26 @@
+# Preface {-}
+
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(tidyverse)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 16)
+```
+
+This material is from the [DataCamp](https://www.datacamp.com) course [Machine Learning with Tree-Based Models in R](https://app.datacamp.com/learn/courses/machine-learning-with-tree-based-models-in-r) by Sandro Raabe.
+
+**Course Description:** Tree-based machine learning models can reveal complex non-linear relationships in data and often dominate machine learning competitions. In this course, you'll use the tidymodels package to explore and build different tree-based models---from simple decision trees to complex random forests. You'll also learn to use boosted trees, a powerful machine learning technique that uses ensemble learning to build high-performing predictive models. Along the way, you'll work with health and credit risk data to predict the incidence of diabetes and customer churn.
+
+Reminder to self: each `*.qmd` file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
+
+```{r include=FALSE, eval = TRUE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown', 'caret', 
+  'caTools', 'ggplot2', "ranger", "randomForest", 'tidyverse',
+  'broom', 'dplyr', 'pwr', 'haven', 'simputation', 'cluster', 
+  'agricolae', 'naniar', 'mice', 'moderndive', 'tidymodels', 'tune',
+  'vip', 'baguette'), 
+  'packages.bib')
+```

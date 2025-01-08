@@ -1,0 +1,427 @@
+# Classification Trees {#intro}
+
+```{r include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(tidyverse)
+library(tidymodels)
+library(dplyr)
+library(knitr)
+```
+
+Ready to build a real machine learning pipeline? Complete step-by-step exercises to learn how to create decision trees, split your data, and predict which patients are most likely to suffer from diabetes. Last but not least, you'll build performance measures to assess your models and judge your predictions.
+
+## Welcome to the course! - (video) {.unnumbered}
+
+<iframe src="https://drive.google.com/file/d/1X-Cb_8ocpXezZPLk-6o8IcP860m5_av5/preview" width="640" height="480" allow="autoplay">
+
+</iframe>
+
+## Why tree-based methods?
+
+Tree-based models are one class of methods used in machine learning. They are superior in many ways, but also have their drawbacks.
+
+Which of these statements are true and which are false?
+
+```{r, echo = FALSE}
+include_graphics("./pics/trees.png")
+```
+
+## Specify that tree
+
+In order to build models and use them to solve real-world problems, you first need to lay the foundations of your model by creating a model specification. This is the very first step in every machine learning pipeline that you will ever build.
+
+You are going to load the relevant packages and design the specification for your classification tree in just a few steps.
+
+A magical moment, enjoy!
+
+### Instructions {.unnumbered}
+
+-   Load the `tidymodels` package.
+
+```{r}
+library(tidymodels)
+```
+
+-   Pick a model class for decision trees, save it as `tree_spec`, and print it.
+
+```{r}
+# Pick a model class
+tree_spec <- decision_tree() 
+
+# Print the result
+tree_spec
+```
+
+-   Set the engine to `"rpart"` and print the result.
+
+```{r}
+# Pick a model class
+tree_spec <- decision_tree() |>  
+  # Set the engine
+  set_engine("rpart")
+
+# Print the result
+tree_spec
+```
+
+-   Set the mode to `"classification"` and print the result.
+
+```{r}
+# Pick a model class
+tree_spec <- decision_tree() |>  
+  # Set the engine
+  set_engine("rpart") |>  
+  # Set the mode
+  set_mode("classification")
+
+# Print the result
+tree_spec
+```
+
+::: callout-note
+You created a decision tree model class, used an `rpart` engine, and set the mode to `"classification"`. Remember, you will need to perform similar steps every time you design a new model. Come back anytime if you need a reminder!
+:::
+
+## Train that model
+
+A model specification is a good start, just like the canvas for a painter. But just as a painter needs color, the specification needs data. Only the final model is able to make predictions:
+
+*Model specification + data = model*
+
+In this exercise, you will train a decision tree that models the risk of diabetes using health variables as predictors. The response variable, `outcome`, indicates whether the patient has diabetes or not, which means this is a binary classification problem (there are just two classes). The dataset also contains health variables of patients like `blood_pressure`, `age`, and `bmi`.
+
+For the rest of the course, the `tidymodels` package will always be pre-loaded. In this exercise, the `diabetes` dataset is also available in your workspace.
+
+```{r}
+diabetes <- read_csv("./data/diabetes_tibble.csv")
+# Change character outcome to a factor
+diabetes <- diabetes |>  mutate_if(is.character, as.factor)
+```
+
+### Instructions {.unnumbered}
+
+-   Create `tree_spec`, a specification for a decision tree with an `rpart` engine.
+
+```{r}
+# Create the specification
+tree_spec <- decision_tree() |>  
+  set_engine("rpart") |>  
+  set_mode("classification")
+```
+
+-   Train a model `tree_model_bmi`, where the `outcome` depends only on the `bmi` predictor by fitting the `diabetes` dataset to the specification.
+
+```{r}
+# Train the model
+tree_model_bmi <- tree_spec |>  
+  fit(outcome ~ bmi, data = diabetes)
+```
+
+-   Print the model to the console.
+
+```{r}
+# Print the model
+tree_model_bmi
+```
+
+-   Graph the model with `rpart.plot()`
+
+```{r}
+rpart.plot::rpart.plot(tree_model_bmi$fit)
+```
+
+::: callout-note
+You have defined your model with `decision_tree()` and trained it to predict outcome using `bmi` like a professional coach! Printing the model displays useful information, such as the training time, the model formula used during training, and the node details. Remember, to fit a model to data is just a different phrase for training it. Don't worry about the precise output too much, you'll cover that later!
+:::
+
+## How to grow your tree - (video) {.unnumbered}
+
+<iframe src="https://drive.google.com/file/d/1mG-kkJlnt4akhVJtCPbSc3Bm0L2k8ZEZ/preview" width="640" height="480" allow="autoplay">
+
+</iframe>
+
+## Train/test split
+
+In order to test your models, you need to build and test the model on two different parts of the data - otherwise, it's like cheating on an exam (as you already know the answers).
+
+The data split is an integral part of the modeling process. You will dive into this by splitting the diabetes data and confirming the split proportions.
+
+The `diabetes` data from the last exercise is pre-loaded in your workspace.
+
+### Instructions {.unnumbered}
+
+-   Split the `diabetes` tibble into `diabetes_split`, a split of 80% training and 20% test data.
+
+```{r}
+set.seed(123)
+# Create the split
+diabetes_split <- initial_split(diabetes, prop = 0.80)
+```
+
+-   Print the resulting object.
+
+```{r}
+# Print the data split
+diabetes_split
+```
+
+-   Extract the training and test sets and save them as `diabetes_train` and `diabetes_test`.
+
+```{r}
+# Extract the training and test set
+diabetes_train <- training(diabetes_split)
+diabetes_test  <- testing(diabetes_split)
+```
+
+-   Verify the correct row proportion in both datasets compared to the `diabetes` tibble.
+
+```{r}
+# Verify the proportions of both sets
+round(nrow(diabetes_train) / nrow(diabetes), 2) == 0.80
+round(nrow(diabetes_test) / nrow(diabetes), 2) == 0.20
+```
+
+::: callout-note
+Using `training()` and `testing()` after the split ensures that you save your working datasets.
+:::
+
+## Avoiding class imbalances
+
+Some data contains very imbalanced outcomes - like a rare disease dataset. When splitting randomly, you might end up with a very unfortunate split. Imagine all the rare observations are in the test and none in the training set. That would ruin your whole training process!
+
+Fortunately, the `initial_split()` function provides a remedy. You are going to observe and solve these so-called class imbalances in this exercise.
+
+There is already code provided to create a split object `diabetes_split` with a 75% training and 25% test split.
+
+```{r}
+# Preparation
+set.seed(9888)
+diabetes_split <- initial_split(diabetes, prop = 0.75)
+```
+
+### Instructions {.unnumbered}
+
+-   Count the proportion of `"yes"` outcomes in the training and test sets of `diabetes_split`.
+
+```{r}
+# Proportion of 'yes' outcomes in the training data
+counts_train <- table(training(diabetes_split)$outcome)
+prop_yes_train <- counts_train["yes"] / sum(counts_train)
+
+# Proportion of 'yes' outcomes in the test data
+counts_test <- table(testing(diabetes_split)$outcome)
+prop_yes_test <- counts_test["yes"] / sum(counts_test)
+
+paste("Proportion of positive outcomes in training set:", round(prop_yes_train, 2))
+paste("Proportion of positive outcomes in test set:", round(prop_yes_test, 2))
+```
+
+-   Redesign `diabetes_split` using the same training/testing proportion, but with the `outcome` variable being equally distributed in both sets. Count the proportion of `yes` outcomes in both datasets.
+
+```{r}
+set.seed(123)
+# Create a split with a constant outcome distribution
+diabetes_split <- initial_split(diabetes, strata = outcome)
+
+# Proportion of 'yes' outcomes in the training data
+counts_train <- table(training(diabetes_split)$outcome)
+prop_yes_train <- counts_train["yes"] / sum(counts_train)
+
+# Proportion of 'yes' outcomes in the test data
+counts_test <- table(testing(diabetes_split)$outcome)
+prop_yes_test <- counts_test['yes'] / sum(counts_test)
+
+paste("Proportion of positive outcomes in training set:", round(prop_yes_train, 2))
+paste("Proportion of positive outcomes in test set:", round(prop_yes_test, 2))
+```
+
+::: callout-note
+Impressive - from 31% vs. 46% positive outcomes to 35% in both sets. This was a tough one, but now you know how simple it is to avoid class imbalances! This is even more important in a large dataset with a very imbalanced target variable.
+:::
+
+## From zero to hero
+
+You mastered the skills of creating a model specification and splitting the data into training and test sets. You also know how to avoid class imbalances in the split. It's now time to combine what you learned in the preceding lesson and build your model using only the training set!
+
+You are going to build a proper *machine learning pipeline*. This is comprised of creating a model specification, splitting your data into training and test sets, and last but not least, fitting the training data to a model. Enjoy!
+
+### Instructions {.unnumbered}
+
+-   Create `diabetes_split`, a split where the training set contains three-quarters of all diabetes rows and where training and test sets have a similar distribution in the outcome variable.
+
+```{r}
+set.seed(9)
+# Create the balanced data split
+diabetes_split <- initial_split(diabetes, 
+                                prop = 0.75, 
+                                strata = outcome)
+```
+
+-   Build a decision tree specification for your model using the `rpart` engine and save it as `tree_spec`.
+
+```{r}
+# Build the specification of the model
+tree_spec <- decision_tree() |>  
+  set_engine("rpart") |>  
+  set_mode("classification")
+```
+
+-   Fit a model `model_trained` using the training data of `diabetes_split` with `outcome` as the target variable and `bmi` and `skin_thickness` as the predictors.
+
+```{r, fig.width = 6, fig.height = 6}
+# Train the model
+model_trained <- tree_spec |> 
+  fit(outcome ~ bmi + skin_thickness, 
+      data = training(diabetes_split))
+
+model_trained
+# Graph the model
+rpart.plot::rpart.plot(model_trained$fit)
+```
+
+::: callout-note
+That pipeline was perfectly handcrafted! Did you see that, according to the nodes, skin thickness lower than 5.5 and BMI value between 37.65 and 40.05 corresponds to a very high risk of diabetes? Let's head over to the engine room to check your model's performance.
+:::
+
+## Predict and evaluate - (video) {.unnumbered}
+
+<iframe src="https://drive.google.com/file/d/1tgR_xrdkzi_hq8_wNO0Sm6TtGysU9Xtb/preview" width="640" height="480" allow="autoplay">
+
+</iframe>
+
+## Make predictions
+
+Making predictions with data is one of the fundamental goals of machine learning. Now that you know how to split the data and fit a model, it's time to make predictions about unseen samples with your models.
+
+You are going to make predictions about your test set using a model obtained by fitting the training data to a tree specification.
+
+Available in your workspace are the datasets that you generated previously (`diabetes_train` and `diabetes_test`) and a decision tree specification `tree_spec`, which was generated using the following code:
+
+```{r, eval = FALSE}
+tree_spec <- decision_tree() |> 
+  set_engine("rpart") |> 
+  set_mode("classification") 
+```
+
+### Instructions {.unnumbered}
+
+-   Fit your specification to the training data using `outcome` as the target variable and all predictors to create model.
+
+```{r}
+# Train your model
+model <- tree_spec |>  
+  fit(outcome ~ ., data = diabetes_train)
+```
+
+-   Use your `model` to predict the outcome of diabetes for every observation in the test set and assign the result to `predictions`.
+
+```{r}
+# Generate predictions
+predictions <- predict(model, 
+                       new_data = diabetes_test, 
+                       type = "class")
+```
+
+-   Add the true test set outcome to `predictions` as a column named `true_class` and save the result as `predictions_combined`.
+
+```{r}
+# Add the true outcomes
+predictions_combined <- predictions |>  
+  mutate(true_class = diabetes_test$outcome)
+```
+
+-   Use the `head()` function to print the first rows of the result.
+
+```{r}
+# Print the first  6 lines of the result
+predictions_combined |> 
+  head() |> 
+  kable()
+```
+
+::: callout-note
+Now every predicted `.pred_class` has its `true_class` counterpart. The natural next step would be to compare these two and see how many are correct. You are about to find out in the next exercise.
+:::
+
+## Crack the matrix
+
+Visual representations are a great and intuitive way to assess results. One way to visualize and assess the performance of your model is by using a confusion matrix. In this exercise, you will create the confusion matrix of your predicted values to see in which cases it performs well and in which cases it doesn't.
+
+The result of the previous exercise, `predictions_combined`, is still loaded.
+
+### Instructions {.unnumbered}
+
+-   Calculate the confusion matrix of the `predictions_combined` tibble and save it as `diabetes_matrix`. Print the result to the console.
+
+```{r}
+# The confusion matrix
+diabetes_matrix <- conf_mat(predictions_combined,
+                            truth = true_class,
+                            estimate = .pred_class)
+
+# Print the matrix
+diabetes_matrix
+```
+
+-   Out of all true `no` outcomes, what percent did your model correctly predict?
+
+```{r}
+79/(79 + 23)
+sens(predictions_combined, 
+     truth = true_class, 
+     estimate = .pred_class)
+```
+
+::: callout-note
+Your model found 77.5% of all positive (`no` diabetes) outcomes. This measure is called ***sensitivity***.
+:::
+
+## Are you predicting correctly?
+
+Your model should be as good as possible, right? One way you can assess this is by counting how often it predicted the correct classes compared to the total number of predictions it made. As discussed in the video, we call this performance measure accuracy. You can either calculate this manually or by using a handy shortcut. Both obtain the same result.
+
+The confusion matrix `diabetes_matrix` and the tibble `predictions_combined` are loaded.
+
+### Instructions {.unnumbered}
+
+-   Print `diabetes_matrix` to the console and use its entries to directly calculate `correct_predictions`, the number of correct predictions. Save the total number of predictions to `all_predictions`. Calculate and the accuracy, save it to `acc_manual`, and print it.
+
+```{r}
+diabetes_matrix
+# Calculate the number of correctly predicted classes
+correct_predictions <- 79 + 32
+
+# Calculate the number of all predicted classes
+all_predictions <- 79 + 20 + 23 + 32
+
+# Calculate and print the accuracy
+acc_manual <- correct_predictions / all_predictions
+acc_manual
+```
+
+-   Calculate the accuracy using a `yardstick` function and store the result in `acc_auto`. Print the accuracy estimate.
+
+```{r}
+# The accuracy calculated by a function
+acc_auto <- accuracy(predictions_combined,
+                     truth = true_class,
+                     estimate = .pred_class)
+acc_auto$.estimate
+```
+
+-   Accuracy is very intuitive but also has its limitations. Imagine we have a naive model that always predicts `no`, regardless of the input. What would the accuracy be for that model?
+
+```{r}
+HDF <- data.frame(true_class = diabetes_test$outcome, 
+                  .pred_class = factor(rep("no", 154), 
+                                       levels = c("no", "yes")))
+
+accuracy(HDF, truth = true_class, estimate = .pred_class)
+```
+
+For the naive model, it would be accurate `r round(accuracy(HDF, truth = true_class, estimate = .pred_class)$.estimate*100, 2)`% of the time.
+
+::: callout-note
+A naive model always predicting no is almost as good as our model. Luckily there are more useful performance metrics which we'll cover later in the course. Stay tuned for Chapter 3!
+:::
