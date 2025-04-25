@@ -79,7 +79,7 @@ tree_spec <- decision_tree() |>
 tree_spec
 ```
 
-::: callout-note
+:::{.callout-note icon=false}
 You created a decision tree model class, used an `rpart` engine, and set the mode to `"classification"`. Remember, you will need to perform similar steps every time you design a new model. Come back anytime if you need a reminder!
 :::
 
@@ -128,10 +128,23 @@ tree_model_bmi
 -   Graph the model with `rpart.plot()`
 
 ```{r}
-rpart.plot::rpart.plot(tree_model_bmi$fit)
+tree_model_bmi |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
 ```
 
-::: callout-note
+:::{.callout-tip icon=false}
+Each node shows:
+
+  - the predicted class (`no` or `yes` diabetes),
+  
+  - the predicted probability of diabetes,
+  
+  - the percentage of observations in the node.
+  
+:::
+
+:::{.callout-note icon=false}
 You have defined your model with `decision_tree()` and trained it to predict outcome using `bmi` like a professional coach! Printing the model displays useful information, such as the training time, the model formula used during training, and the node details. Remember, to fit a model to data is just a different phrase for training it. Don't worry about the precise output too much, you'll cover that later!
 :::
 
@@ -182,7 +195,7 @@ round(nrow(diabetes_train) / nrow(diabetes), 2) == 0.80
 round(nrow(diabetes_test) / nrow(diabetes), 2) == 0.20
 ```
 
-::: callout-note
+:::{.callout-note icon=false}
 Using `training()` and `testing()` after the split ensures that you save your working datasets.
 :::
 
@@ -236,7 +249,7 @@ paste("Proportion of positive outcomes in training set:", round(prop_yes_train, 
 paste("Proportion of positive outcomes in test set:", round(prop_yes_test, 2))
 ```
 
-::: callout-note
+:::{.callout-note icon=false}
 Impressive - from 31% vs. 46% positive outcomes to 35% in both sets. This was a tough one, but now you know how simple it is to avoid class imbalances! This is even more important in a large dataset with a very imbalanced target variable.
 :::
 
@@ -269,7 +282,7 @@ tree_spec <- decision_tree() |>
 
 -   Fit a model `model_trained` using the training data of `diabetes_split` with `outcome` as the target variable and `bmi` and `skin_thickness` as the predictors.
 
-```{r, fig.width = 6, fig.height = 6}
+```{r, fig.width = 8, fig.height = 6}
 # Train the model
 model_trained <- tree_spec |> 
   fit(outcome ~ bmi + skin_thickness, 
@@ -277,11 +290,24 @@ model_trained <- tree_spec |>
 
 model_trained
 # Graph the model
-rpart.plot::rpart.plot(model_trained$fit)
+model_trained |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
 ```
 
-::: callout-note
-That pipeline was perfectly handcrafted! Did you see that, according to the nodes, skin thickness lower than 5.5 and BMI value between 37.65 and 40.05 corresponds to a very high risk of diabetes? Let's head over to the engine room to check your model's performance.
+:::{.callout-tip icon=false}
+Each node shows:
+
+  - the predicted class (`no` or `yes` diabetes),
+  
+  - the predicted probability of diabetes,
+  
+  - the percentage of observations in the node.
+  
+:::
+
+:::{.callout-note icon=false}
+That pipeline was perfectly handcrafted!f Let's head over to the engine room to check your model's performance.
 :::
 
 ## Predict and evaluate - (video) {.unnumbered}
@@ -298,10 +324,12 @@ You are going to make predictions about your test set using a model obtained by 
 
 Available in your workspace are the datasets that you generated previously (`diabetes_train` and `diabetes_test`) and a decision tree specification `tree_spec`, which was generated using the following code:
 
-```{r, eval = FALSE}
+```{r}
 tree_spec <- decision_tree() |> 
   set_engine("rpart") |> 
   set_mode("classification") 
+diabetes_train <- training(diabetes_split)
+diabetes_test <- testing(diabetes_split)
 ```
 
 ### Instructions {.unnumbered}
@@ -340,7 +368,7 @@ predictions_combined |>
   kable()
 ```
 
-::: callout-note
+:::{.callout-note icon=false}
 Now every predicted `.pred_class` has its `true_class` counterpart. The natural next step would be to compare these two and see how many are correct. You are about to find out in the next exercise.
 :::
 
@@ -362,19 +390,24 @@ diabetes_matrix <- conf_mat(predictions_combined,
 
 # Print the matrix
 diabetes_matrix
+# Print metrics
+diabetes_matrix |> 
+  summary() |> 
+  kable()
 ```
 
 -   Out of all true `no` outcomes, what percent did your model correctly predict?
 
 ```{r}
-79/(79 + 23)
+99/(99 + 26)
 sens(predictions_combined, 
      truth = true_class, 
-     estimate = .pred_class)
+     estimate = .pred_class) -> M1
+M1
 ```
 
-::: callout-note
-Your model found 77.5% of all positive (`no` diabetes) outcomes. This measure is called ***sensitivity***.
+:::{.callout-note icon=false}
+Your model found `r M1$.estimate*100`% of all positive (`no` diabetes) outcomes. This measure is called ***sensitivity***.
 :::
 
 ## Are you predicting correctly?
@@ -390,10 +423,10 @@ The confusion matrix `diabetes_matrix` and the tibble `predictions_combined` are
 ```{r}
 diabetes_matrix
 # Calculate the number of correctly predicted classes
-correct_predictions <- 79 + 32
+correct_predictions <- 99 + 31
 
 # Calculate the number of all predicted classes
-all_predictions <- 79 + 20 + 23 + 32
+all_predictions <- 99 + 36 + 26 + 31
 
 # Calculate and print the accuracy
 acc_manual <- correct_predictions / all_predictions
@@ -414,7 +447,7 @@ acc_auto$.estimate
 
 ```{r}
 HDF <- data.frame(true_class = diabetes_test$outcome, 
-                  .pred_class = factor(rep("no", 154), 
+                  .pred_class = factor(rep("no", 192), 
                                        levels = c("no", "yes")))
 
 accuracy(HDF, truth = true_class, estimate = .pred_class)
@@ -422,6 +455,6 @@ accuracy(HDF, truth = true_class, estimate = .pred_class)
 
 For the naive model, it would be accurate `r round(accuracy(HDF, truth = true_class, estimate = .pred_class)$.estimate*100, 2)`% of the time.
 
-::: callout-note
+:::{.callout-note icon=false}
 A naive model always predicting no is almost as good as our model. Luckily there are more useful performance metrics which we'll cover later in the course. Stay tuned for Chapter 3!
 :::

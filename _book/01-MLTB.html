@@ -304,10 +304,10 @@ Computational engine: rpart </code></pre>
 Computational engine: rpart </code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -374,7 +374,9 @@ node), split, n, loss, yval, (yprob)
 <li>Graph the model with <code>rpart.plot()</code></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(tree_model_bmi<span class="sc">$</span>fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tree_model_bmi <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -383,10 +385,28 @@ node), split, n, loss, yval, (yprob)
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each node shows:</p>
+<ul>
+<li><p>the predicted class (<code>no</code> or <code>yes</code> diabetes),</p></li>
+<li><p>the predicted probability of diabetes,</p></li>
+<li><p>the percentage of observations in the node.</p></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -451,10 +471,10 @@ Note
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -524,10 +544,10 @@ Note
 <pre><code>[1] "Proportion of positive outcomes in test set: 0.35"</code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -611,26 +631,46 @@ node), split, n, loss, yval, (yprob)
        15) skin_thickness&lt; 37.5 42  12 yes (0.2857143 0.7142857) *</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graph the model</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(model_trained<span class="sc">$</span>fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>model_trained <span class="sc">|&gt;</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="01-MLTB_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="01-MLTB_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each node shows:</p>
+<ul>
+<li><p>the predicted class (<code>no</code> or <code>yes</code> diabetes),</p></li>
+<li><p>the predicted probability of diabetes,</p></li>
+<li><p>the percentage of observations in the node.</p></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>That pipeline was perfectly handcrafted! Did you see that, according to the nodes, skin thickness lower than 5.5 and BMI value between 37.65 and 40.05 corresponds to a very high risk of diabetes? Let’s head over to the engine room to check your model’s performance.</p>
+<p>That pipeline was perfectly handcrafted!f Let’s head over to the engine room to check your model’s performance.</p>
 </div>
 </div>
 </section>
@@ -648,7 +688,9 @@ Note
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>) </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>diabetes_train <span class="ot">&lt;-</span> <span class="fu">training</span>(diabetes_split)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>diabetes_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(diabetes_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="instructions-5" class="level3 unnumbered">
 <h3 class="unnumbered anchored" data-anchor-id="instructions-5">Instructions</h3>
@@ -695,37 +737,37 @@ Note
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">yes</td>
-<td style="text-align: left;">yes</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">yes</td>
-<td style="text-align: left;">yes</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">yes</td>
+<td style="text-align: left;">no</td>
 <td style="text-align: left;">yes</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">yes</td>
-<td style="text-align: left;">yes</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;">no</td>
 <td style="text-align: left;">no</td>
 </tr>
-<tr class="even">
+<tr class="odd">
+<td style="text-align: left;">no</td>
 <td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">no</td>
 <td style="text-align: left;">yes</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -757,39 +799,122 @@ Note
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction no yes
-       no  79  20
-       yes 23  32</code></pre>
+       no  99  36
+       yes 26  31</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print metrics</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>diabetes_matrix <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6770833</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">kap</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.2638219</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sens</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7920000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spec</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.4626866</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ppv</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7333333</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">npv</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.5438596</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mcc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.2657016</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">j_index</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.2546866</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bal_accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6273433</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">detection_prevalence</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7031250</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7333333</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7920000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">f_meas</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.7615385</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <ul>
 <li>Out of all true <code>no</code> outcomes, what percent did your model correctly predict?</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dv">79</span><span class="sc">/</span>(<span class="dv">79</span> <span class="sc">+</span> <span class="dv">23</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="dv">99</span><span class="sc">/</span>(<span class="dv">99</span> <span class="sc">+</span> <span class="dv">26</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7745098</code></pre>
+<pre><code>[1] 0.792</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sens</span>(predictions_combined, </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">truth =</span> true_class, </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sens</span>(predictions_combined, </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">truth =</span> true_class, </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">estimate =</span> .pred_class) <span class="ot">-&gt;</span> M1</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>M1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 sens    binary         0.775</code></pre>
+1 sens    binary         0.792</code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Your model found 77.5% of all positive (<code>no</code> diabetes) outcomes. This measure is called <strong><em>sensitivity</em></strong>.</p>
+<p>Your model found 79.2% of all positive (<code>no</code> diabetes) outcomes. This measure is called <strong><em>sensitivity</em></strong>.</p>
 </div>
 </div>
 </section>
@@ -804,60 +929,60 @@ Note
 <li>Print <code>diabetes_matrix</code> to the console and use its entries to directly calculate <code>correct_predictions</code>, the number of correct predictions. Save the total number of predictions to <code>all_predictions</code>. Calculate and the accuracy, save it to <code>acc_manual</code>, and print it.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>diabetes_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>diabetes_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Truth
 Prediction no yes
-       no  79  20
-       yes 23  32</code></pre>
+       no  99  36
+       yes 26  31</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of correctly predicted classes</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>correct_predictions <span class="ot">&lt;-</span> <span class="dv">79</span> <span class="sc">+</span> <span class="dv">32</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of all predicted classes</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>all_predictions <span class="ot">&lt;-</span> <span class="dv">79</span> <span class="sc">+</span> <span class="dv">20</span> <span class="sc">+</span> <span class="dv">23</span> <span class="sc">+</span> <span class="dv">32</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate and print the accuracy</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>acc_manual <span class="ot">&lt;-</span> correct_predictions <span class="sc">/</span> all_predictions</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>acc_manual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of correctly predicted classes</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>correct_predictions <span class="ot">&lt;-</span> <span class="dv">99</span> <span class="sc">+</span> <span class="dv">31</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of all predicted classes</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>all_predictions <span class="ot">&lt;-</span> <span class="dv">99</span> <span class="sc">+</span> <span class="dv">36</span> <span class="sc">+</span> <span class="dv">26</span> <span class="sc">+</span> <span class="dv">31</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate and print the accuracy</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>acc_manual <span class="ot">&lt;-</span> correct_predictions <span class="sc">/</span> all_predictions</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>acc_manual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7207792</code></pre>
+<pre><code>[1] 0.6770833</code></pre>
 </div>
 </div>
 <ul>
 <li>Calculate the accuracy using a <code>yardstick</code> function and store the result in <code>acc_auto</code>. Print the accuracy estimate.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The accuracy calculated by a function</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>acc_auto <span class="ot">&lt;-</span> <span class="fu">accuracy</span>(predictions_combined,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truth =</span> true_class,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">estimate =</span> .pred_class)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>acc_auto<span class="sc">$</span>.estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The accuracy calculated by a function</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>acc_auto <span class="ot">&lt;-</span> <span class="fu">accuracy</span>(predictions_combined,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">truth =</span> true_class,</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">estimate =</span> .pred_class)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>acc_auto<span class="sc">$</span>.estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.7207792</code></pre>
+<pre><code>[1] 0.6770833</code></pre>
 </div>
 </div>
 <ul>
 <li>Accuracy is very intuitive but also has its limitations. Imagine we have a naive model that always predicts <code>no</code>, regardless of the input. What would the accuracy be for that model?</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>HDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">true_class =</span> diabetes_test<span class="sc">$</span>outcome, </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.pred_class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"no"</span>, <span class="dv">154</span>), </span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)))</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(HDF, <span class="at">truth =</span> true_class, <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>HDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">true_class =</span> diabetes_test<span class="sc">$</span>outcome, </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">.pred_class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"no"</span>, <span class="dv">192</span>), </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(HDF, <span class="at">truth =</span> true_class, <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric  .estimator .estimate
   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-1 accuracy binary         0.662</code></pre>
+1 accuracy binary         0.651</code></pre>
 </div>
 </div>
-<p>For the naive model, it would be accurate 66.23% of the time.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<p>For the naive model, it would be accurate 65.1% of the time.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
